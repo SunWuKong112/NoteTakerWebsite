@@ -29,7 +29,7 @@ const saveNote = (note) => {
 // A function for deleting a note from the db
 const deleteNote = (key) => {
   return $.ajax({
-    url: "api/notes/" + key,
+    url: "api/notes" + key,
     method: "DELETE",
   }).then(() => {
     localStorage.removeItem(key);
@@ -37,7 +37,7 @@ const deleteNote = (key) => {
     console.log(err)
     alert("");
   });
-});
+};
 
 // If there is an activeNote, display it, otherwise render empty inputs
 const renderActiveNote = () => {
@@ -68,6 +68,8 @@ const handleNoteSave = function () {
     renderActiveNote();
   });
 };
+
+localStorage.setItem("Test Title", "SGISUlDti7NFR62JeowTqJVov");
 
 // Delete the clicked note
 const handleNoteDelete = function (event) {

@@ -1,7 +1,9 @@
 // Dependencies
 // =============================================================
-var express = require("express");
-var path = require("path");
+const express = require("express");
+const path = require("path");
+const fs = require("fs");
+
 const { notStrictEqual } = require("assert");
 
 // Sets up the Express App
@@ -14,8 +16,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-// =============================================================
-const notes = [];
 
 // Routes
 // =============================================================
@@ -45,7 +45,8 @@ app.delete("/api/notes/:key", function(req, res) {
 });
 
 app.get("/api/notes", function(req, res) {
-  return res.json(notes);
+  var files = fs.readFile(__dirname + "db/db.json")
+  return res.json(files);
 });
 
 app.get("/api/notes/:key", function(req, res) {
@@ -60,8 +61,9 @@ app.get("/api/notes/:key", function(req, res) {
 app.post("/api/notes", function(req, res) {
   var note = req.body;
   note.id = generateId();
-  
+  var notes = JSON.stringify(fs.readFile(__dirname + "db/db.json"));
   notes.push(note);
+  fs.writeFile(__dirname + "db/db.json", JSON.stringfy(notes));
   return res.json(note.id);
 });
 
@@ -92,25 +94,6 @@ function findObjectByKey(array, value) {
   }
   return null;
 }
-
-
-app.post("/api/notes/", function(req, res) {
-  // req.body hosts is equal to the JSON post sent from the user
-  // This works because of our body parsing middleware
-  var note = req.body;
-
-  // Using a RegEx Pattern to remove spaces from newCharacter
-  // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-
-  var ID = generateId();
-  note.id = ID;
-
-  console.log(note);
-
-  characters.push(note);
-
-  res.json(note);
-});
 
 // Starts the server to begin listening
 // =============================================================
