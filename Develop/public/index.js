@@ -21,21 +21,18 @@ const saveNote = (note) => {
     url: "/api/notes",
     data: note,
     method: "POST",
-  }).then(answer => {
-    localStorage.setItem(note.title, answer);
   });
 };
 
 // A function for deleting a note from the db
-const deleteNote = (key) => {
+const deleteNote = (key, note) => {
   return $.ajax({
-    url: "api/notes" + key,
+    url: "api/notes/" + key,
     method: "DELETE",
   }).then(() => {
-    localStorage.removeItem(key);
+    localStorage.removeItem(note.title);
   }).catch((err, key) => {
     console.log(err)
-    alert("");
   });
 };
 
@@ -63,13 +60,12 @@ const handleNoteSave = function () {
     text: $noteText.val(),
   };
 
-  saveNote(newNote).then(() => {
+  saveNote(newNote).then((answer) => {
+    localStorage.setItem(newNote.title, answer);
     getAndRenderNotes();
     renderActiveNote();
-  });
+  }).catch((err) =>{console.log(err);});
 };
-
-localStorage.setItem("Test Title", "SGISUlDti7NFR62JeowTqJVov");
 
 // Delete the clicked note
 const handleNoteDelete = function (event) {
@@ -77,14 +73,13 @@ const handleNoteDelete = function (event) {
   event.stopPropagation();
 
   const note = $(this).parent(".list-group-item").data();
-
+  console.log(note);
+  var key = localStorage.getItem(note.title);
   if (activeNote.id === note.id) {
     activeNote = {};
   }
 
-  var key = localStorage.getItem(note.title);
-
-  deleteNote(key).then(() => {
+  deleteNote(key, note).then(() => {
     getAndRenderNotes();
     renderActiveNote();
   });
