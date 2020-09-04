@@ -31,7 +31,7 @@ const deleteNote = (key, note) => {
     method: "DELETE",
   }).then(() => {
     localStorage.removeItem(note.title);
-  }).catch((err, key) => {
+  }).catch((err) => {
     console.log(err)
   });
 };
@@ -64,7 +64,9 @@ const handleNoteSave = function () {
     localStorage.setItem(newNote.title, answer);
     getAndRenderNotes();
     renderActiveNote();
-  }).catch((err) =>{console.log(err);});
+  }).catch((err) =>{
+    console.log(err);
+  });
 };
 
 // Delete the clicked note
@@ -73,7 +75,6 @@ const handleNoteDelete = function (event) {
   event.stopPropagation();
 
   const note = $(this).parent(".list-group-item").data();
-  console.log(note);
   var key = localStorage.getItem(note.title);
   if (activeNote.id === note.id) {
     activeNote = {};
